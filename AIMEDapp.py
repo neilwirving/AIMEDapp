@@ -74,8 +74,8 @@ elif menu == "Decision Classification Tool":
     else:
         st.write("This decision is classified as **Reversible/Low Stakes**.")
 
-elif menu == "AIMED Process Walkthrough":
-    st.header("AIMED Process Walkthrough")
+elif menu == "AIMED Template":
+    st.header("AIMED Template")
     st.write("Use this guided process to walk through the AIMED framework for your decision-making.")
 
     # Step 1: Assess the Situation
