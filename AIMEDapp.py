@@ -74,12 +74,12 @@ elif menu == "Decision Classification Tool":
     st.write("Evaluate your decision as Reversible/Low Stakes or Irreversible/High Stakes.")
 
     # Input Form
-    impact_duration = st.selectbox("Impact Duration", ["Short-term (days or weeks)", "Long-term (months or years)"])
-    cost_of_reversal = st.selectbox("Cost of Reversal", ["Minimal effort or cost", "Significant effort or cost"])
-    stakeholder_involvement = st.selectbox("Stakeholder Involvement", ["Internal team", "External stakeholders"])
+    impact_duration = st.selectbox("Impact Duration", ["1 day to 1 month", "1 month to 1 year", "More than 1 year"])
+    cost_of_reversal = st.selectbox("Cost of Reversal", ["Minimal effort or cost", "Moderate effort or cost", "Significant effort or cost"])
+    stakeholder_involvement = st.selectbox("Stakeholder Involvement", ["Internal team only", "Internal and some external", "Broad external involvement"])
 
     # Classification
-    if impact_duration == "Long-term (months or years)" or cost_of_reversal == "Significant effort or cost" or stakeholder_involvement == "External stakeholders":
+    if impact_duration == "More than 1 year" or cost_of_reversal == "Significant effort or cost" or stakeholder_involvement == "Broad external involvement":
         st.write("This decision is classified as **Irreversible/High Stakes**.")
     else:
         st.write("This decision is classified as **Reversible/Low Stakes**.")
