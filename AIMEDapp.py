@@ -38,6 +38,15 @@ st.markdown("""
         border: 1px solid #FF6F61;
         border-radius: 5px;
     }
+    .low-stakes {
+        color: green;
+    }
+    .moderate-stakes {
+        color: orange;
+    }
+    .high-stakes {
+        color: red;
+    }
 </style>
 """, unsafe_allow_html=True)
 
@@ -87,16 +96,16 @@ elif menu == "Decision Classification Tool":
 
     total_score = impact_duration_score + cost_of_reversal_score + stakeholder_involvement_score
 
-    # Classification Logic
+    # Classification Logic with Color-Coded Output
     if total_score <= 3:
-        st.write("### Classification: Low stakes, reversible decision.")
-        st.write("**Action Plan**: Quick evaluation with minimal resources.")
+        st.markdown("### Classification: <span class='low-stakes'>Low stakes, reversible decision.</span>", unsafe_allow_html=True)
+        st.markdown("**Action Plan**: Quick evaluation with minimal resources.")
     elif 4 <= total_score <= 6:
-        st.write("### Classification: Moderate stakes, partially reversible decision.")
-        st.write("**Action Plan**: Moderate research and modelling required.")
+        st.markdown("### Classification: <span class='moderate-stakes'>Moderate stakes, partially reversible decision.</span>", unsafe_allow_html=True)
+        st.markdown("**Action Plan**: Moderate research and modelling required.")
     else:
-        st.write("### Classification: High stakes, irreversible decision.")
-        st.write("**Action Plan**: Detailed investigation and stress-testing recommended. Allocate significant time and resources.")
+        st.markdown("### Classification: <span class='high-stakes'>High stakes, irreversible decision.</span>", unsafe_allow_html=True)
+        st.markdown("**Action Plan**: Detailed investigation and stress-testing recommended. Allocate significant time and resources.")
 
 elif menu == "AIMED Process Walkthrough":
     st.header("AIMED Process Walkthrough")
