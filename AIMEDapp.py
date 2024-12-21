@@ -101,7 +101,7 @@ elif menu == "AIMED Process Walkthrough":
     # Step 5: Debrief and Improve
     st.subheader("5. Debrief and Improve")
     outcomes = st.text_area("What were the outcomes of your decision?", "")
-    lessons_learned = st.text_area("What lessons did you learn that can improve future decisions?", "")")
+    lessons_learned = st.text_area("What lessons did you learn that can improve future decisions?", "")
         st.write(f"**Outcomes:** {outcomes}")
 
 # Footer
