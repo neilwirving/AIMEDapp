@@ -59,16 +59,6 @@ if menu == "Home":
     5. **Debrief and Improve**: Review outcomes and institutionalise insights.
     """)
 
-    st.subheader("Antifragility Principles")
-    st.write("Adopting antifragility ensures systems thrive under stress, turning challenges into opportunities for growth.")
-    st.markdown("""
-    - **Stress-Test Scenarios**: Simulate extreme conditions to identify vulnerabilities.
-    - **Feedback Loops**: Build adaptive processes that evolve in real-time.
-    - **Diversity and Redundancy**: Incorporate backups and alternatives to reduce risk.
-    - **Experimentation**: Use controlled tests before fully committing to solutions.
-    - **Opportunities in Uncertainty**: Reframe challenges as opportunities for innovation.
-    """)
-
 elif menu == "Decision Classification Tool":
     st.header("Decision Classification Tool")
     st.write("Evaluate your decision as Reversible/Low Stakes or Irreversible/High Stakes.")
@@ -84,21 +74,34 @@ elif menu == "Decision Classification Tool":
     else:
         st.write("This decision is classified as **Reversible/Low Stakes**.")
 
-elif menu == "Case Study Builder":
-    st.header("Build Your Own Case Study")
-    st.write("Document your decision-making process using the AIMED framework.")
+elif menu == "AIMED Process Walkthrough":
+    st.header("AIMED Process Walkthrough")
+    st.write("Use this guided process to walk through the AIMED framework for your decision-making.")
 
-    # Input Fields
-    case_title = st.text_input("Case Study Title", "")
-    decision_context = st.text_area("Describe the Decision Context", "")
-    steps_taken = st.text_area("Steps Taken (using AIMED)", "")
-    outcomes = st.text_area("Outcomes and Lessons Learned", "")
+    # Step 1: Assess the Situation
+    st.subheader("1. Assess the Situation")
+    problem_description = st.text_area("Describe the problem or decision context", "")
+    business_alignment = st.text_area("How does this align with your business goals?", "")
 
-    if st.button("Generate Case Study"):
-        st.subheader("Your Case Study")
-        st.write(f"### {case_title}")
-        st.write(f"**Context:** {decision_context}")
-        st.write(f"**Steps Taken:** {steps_taken}")
+    # Step 2: Investigate Options
+    st.subheader("2. Investigate Options")
+    possible_solutions = st.text_area("List possible solutions or approaches", "")
+    data_needs = st.text_area("What data or information do you need to evaluate these options?", "")
+
+    # Step 3: Model the Outcomes
+    st.subheader("3. Model the Outcomes")
+    scenarios = st.text_area("Describe the scenarios you want to model (best-case, worst-case, etc.)", "")
+    risks = st.text_area("What risks have you identified for each option?", "")
+
+    # Step 4: Execute the Decision
+    st.subheader("4. Execute the Decision")
+    selected_option = st.text_input("Which option are you implementing?", "")
+    implementation_plan = st.text_area("Outline your implementation plan", "")
+
+    # Step 5: Debrief and Improve
+    st.subheader("5. Debrief and Improve")
+    outcomes = st.text_area("What were the outcomes of your decision?", "")
+    lessons_learned = st.text_area("What lessons did you learn that can improve future decisions?", "")")
         st.write(f"**Outcomes:** {outcomes}")
 
 # Footer
