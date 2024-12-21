@@ -2,6 +2,8 @@ import streamlit as st
 from fpdf import FPDF
 import base64
 import openai
+import csv
+from io import StringIO
 
 # Sidebar Navigation
 menu = st.sidebar.radio("Navigate", ["Home", "Decision Classification Tool", "AIMED Process Walkthrough"])
@@ -99,6 +101,38 @@ def export_to_pdf(problem_description, business_alignment, possible_solutions, d
         href = f'<a href="data:application/octet-stream;base64,{b64}" download="AIMED_Report.pdf">Download PDF</a>'
         st.markdown(href, unsafe_allow_html=True)
 
+# CSV Export Function
+def export_to_csv(problem_description, business_alignment, possible_solutions, data_needs, scenarios, risks, selected_option, implementation_plan, ai_advice=None):
+    output = StringIO()
+    writer = csv.writer(output)
+
+    writer.writerow(["Section", "Details"])
+    writer.writerow(["1. Assess the Situation", ""])
+    writer.writerow(["Problem Description", problem_description])
+    writer.writerow(["Business Alignment", business_alignment])
+
+    writer.writerow(["2. Investigate Options", ""])
+    writer.writerow(["Possible Solutions", possible_solutions])
+    writer.writerow(["Data Needs", data_needs])
+
+    writer.writerow(["3. Model the Outcomes", ""])
+    writer.writerow(["Scenarios", scenarios])
+    writer.writerow(["Risks", risks])
+
+    writer.writerow(["4. Execute the Decision", ""])
+    writer.writerow(["Selected Option", selected_option])
+    writer.writerow(["Implementation Plan", implementation_plan])
+
+    if ai_advice:
+        writer.writerow(["AI-Generated Advice", ai_advice])
+
+    output.seek(0)
+    csv_output = output.getvalue()
+    b64 = base64.b64encode(csv_output.encode()).decode()
+    href = f'<a href="data:file/csv;base64,{b64}" download="AIMED_Report.csv">Download CSV</a>'
+    st.markdown(href, unsafe_allow_html=True)
+
+
 if menu == "Home":
     # Page Title
     st.title("AIMED Decision Framework for Construction Leaders")
@@ -189,5 +223,6 @@ elif menu == "AIMED Process Walkthrough":
                 Data Needs: {data_needs}
                 Scenarios: {scenarios}
                 Risks: {risks}
-                Selected Option
-
+                Selected Option: {selected_option}
+                Implementation Plan: {implementation_plan}
+                """
