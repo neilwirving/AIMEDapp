@@ -120,16 +120,6 @@ if menu == "Home":
     5. **Debrief and Improve**: Review outcomes and institutionalise insights.
     """)
 
-    st.subheader("Antifragility Principles")
-    st.write("Adopting antifragility ensures systems thrive under stress, turning challenges into opportunities for growth.")
-    st.markdown("""
-    - **Stress-Test Scenarios**: Simulate extreme conditions to identify vulnerabilities.
-    - **Feedback Loops**: Build adaptive processes that evolve in real-time.
-    - **Diversity and Redundancy**: Incorporate backups and alternatives to reduce risk.
-    - **Experimentation**: Use controlled tests before fully committing to solutions.
-    - **Opportunities in Uncertainty**: Reframe challenges as opportunities for innovation.
-    """)
-
 elif menu == "Decision Classification Tool":
     st.header("Decision Classification Tool")
     st.write("Evaluate your decision as Reversible/Low Stakes or Irreversible/High Stakes.")
