@@ -1,4 +1,6 @@
 import streamlit as st
+from fpdf import FPDF
+import base64
 
 # Sidebar Navigation
 menu = st.sidebar.radio("Navigate", ["Home", "Decision Classification Tool", "AIMED Process Walkthrough"])
@@ -112,6 +114,47 @@ elif menu == "AIMED Process Walkthrough":
     st.subheader("5. Debrief and Improve")
     outcomes = st.text_area("What were the outcomes of your decision?", "")
     lessons_learned = st.text_area("What lessons did you learn that can improve future decisions?", "")
+
+    # Export to PDF Functionality
+    if st.button("Export to PDF"):
+        pdf = FPDF()
+        pdf.add_page()
+        pdf.set_font("Arial", size=12)
+
+        pdf.cell(200, 10, txt="AIMED Process Walkthrough Report", ln=True, align='C')
+        pdf.ln(10)
+
+        pdf.cell(200, 10, txt="1. Assess the Situation", ln=True)
+        pdf.multi_cell(0, 10, f"Problem Description: {problem_description}")
+        pdf.multi_cell(0, 10, f"Business Alignment: {business_alignment}")
+        pdf.ln(5)
+
+        pdf.cell(200, 10, txt="2. Investigate Options", ln=True)
+        pdf.multi_cell(0, 10, f"Possible Solutions: {possible_solutions}")
+        pdf.multi_cell(0, 10, f"Data Needs: {data_needs}")
+        pdf.ln(5)
+
+        pdf.cell(200, 10, txt="3. Model the Outcomes", ln=True)
+        pdf.multi_cell(0, 10, f"Scenarios: {scenarios}")
+        pdf.multi_cell(0, 10, f"Risks: {risks}")
+        pdf.ln(5)
+
+        pdf.cell(200, 10, txt="4. Execute the Decision", ln=True)
+        pdf.multi_cell(0, 10, f"Selected Option: {selected_option}")
+        pdf.multi_cell(0, 10, f"Implementation Plan: {implementation_plan}")
+        pdf.ln(5)
+
+        pdf.cell(200, 10, txt="5. Debrief and Improve", ln=True)
+        pdf.multi_cell(0, 10, f"Outcomes: {outcomes}")
+        pdf.multi_cell(0, 10, f"Lessons Learned: {lessons_learned}")
+
+        pdf_output = "AIMED_Report.pdf"
+        pdf.output(pdf_output)
+
+        with open(pdf_output, "rb") as pdf_file:
+            b64 = base64.b64encode(pdf_file.read()).decode()
+            href = f'<a href="data:application/octet-stream;base64,{b64}" download="AIMED_Report.pdf">Download PDF</a>'
+            st.markdown(href, unsafe_allow_html=True)
 
 # Footer
 st.write("Developed to support construction leaders in smarter decision-making using the AIMED framework.")
