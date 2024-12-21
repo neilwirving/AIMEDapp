@@ -1,7 +1,7 @@
 import streamlit as st
 
 # Sidebar Navigation
-menu = st.sidebar.radio("Navigate", ["Home", "Decision Classification Tool", "Case Study Builder"])
+menu = st.sidebar.radio("Navigate", ["Home", "Decision Classification Tool", "AIMED Process Walkthrough"])
 
 # Styling: Custom CSS for consistent colors and layout
 st.markdown("""
@@ -59,6 +59,16 @@ if menu == "Home":
     5. **Debrief and Improve**: Review outcomes and institutionalise insights.
     """)
 
+    st.subheader("Antifragility Principles")
+    st.write("Adopting antifragility ensures systems thrive under stress, turning challenges into opportunities for growth.")
+    st.markdown("""
+    - **Stress-Test Scenarios**: Simulate extreme conditions to identify vulnerabilities.
+    - **Feedback Loops**: Build adaptive processes that evolve in real-time.
+    - **Diversity and Redundancy**: Incorporate backups and alternatives to reduce risk.
+    - **Experimentation**: Use controlled tests before fully committing to solutions.
+    - **Opportunities in Uncertainty**: Reframe challenges as opportunities for innovation.
+    """)
+
 elif menu == "Decision Classification Tool":
     st.header("Decision Classification Tool")
     st.write("Evaluate your decision as Reversible/Low Stakes or Irreversible/High Stakes.")
@@ -74,8 +84,8 @@ elif menu == "Decision Classification Tool":
     else:
         st.write("This decision is classified as **Reversible/Low Stakes**.")
 
-elif menu == "AIMED Template":
-    st.header("AIMED Template")
+elif menu == "AIMED Process Walkthrough":
+    st.header("AIMED Process Walkthrough")
     st.write("Use this guided process to walk through the AIMED framework for your decision-making.")
 
     # Step 1: Assess the Situation
@@ -102,7 +112,6 @@ elif menu == "AIMED Template":
     st.subheader("5. Debrief and Improve")
     outcomes = st.text_area("What were the outcomes of your decision?", "")
     lessons_learned = st.text_area("What lessons did you learn that can improve future decisions?", "")
-    st.write(f"**Outcomes:** {outcomes}")
 
 # Footer
 st.write("Developed to support construction leaders in smarter decision-making using the AIMED framework.")
