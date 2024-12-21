@@ -2,8 +2,6 @@ import streamlit as st
 from fpdf import FPDF
 import base64
 import openai
-import csv
-from io import StringIO
 
 # Sidebar Navigation
 menu = st.sidebar.radio("Navigate", ["Home", "Decision Classification Tool", "AIMED Process Walkthrough"])
@@ -181,7 +179,7 @@ elif menu == "AIMED Process Walkthrough":
 
     ai_advice = None
 
-    # AI Advice Section
+ # AI Advice Section
     if not st.session_state["ai_requested"] and all([problem_description, business_alignment, possible_solutions, data_needs, scenarios, risks, selected_option, implementation_plan]):
         if st.button("Get AI Advice"):
             with st.spinner("Analyzing inputs..."):
@@ -195,3 +193,11 @@ elif menu == "AIMED Process Walkthrough":
                 Selected Option: {selected_option}
                 Implementation Plan: {implementation_plan}
                 """
+                advice = get_ai_advice(user_inputs)
+                st.session_state["ai_requested"] = True
+                st.subheader("AI-Generated Advice")
+                st.write(advice)
+    elif st.session_state["ai_requested"]:
+        st.warning("You have already requested AI advice for this session.")
+    else:
+        st.warning("Please complete all fields before requesting AI advice.")
