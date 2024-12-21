@@ -184,9 +184,9 @@ user_inputs = None
 ai_advice = None
 
  # AI Advice Section
-    if not st.session_state["ai_requested"] and all([problem_description, business_alignment, possible_solutions, data_needs, scenarios, risks, selected_option, implementation_plan]):
-        if st.button("Get AI Advice"):
-            with st.spinner("Analyzing inputs..."):
+if not st.session_state["ai_requested"] and all([problem_description, business_alignment, possible_solutions, data_needs, scenarios, risks, selected_option, implementation_plan]):
+    if st.button("Get AI Advice"):
+        with st.spinner("Analyzing inputs..."):
                 user_inputs = f"""
                 Problem Description: {problem_description}
                 Business Alignment: {business_alignment}
