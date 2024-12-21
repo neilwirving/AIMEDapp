@@ -45,7 +45,7 @@ st.markdown("""
 # AI Advice Function
 def get_ai_advice(user_inputs):
     openai.api_key = st.secrets["openai"]["api_key"]  # Securely fetch the API key from Streamlit secrets
-    response = openai.chat.completions.create(
+    response = openai.ChatCompletion.create(
         model="gpt-4o-mini",  # Use the latest supported model
         messages=[
             {"role": "system", "content": "You are an expert providing decision-making advice."},
@@ -54,7 +54,9 @@ def get_ai_advice(user_inputs):
         max_tokens=500,
         temperature=0.7
     )
-    return response["choices"][0]["message"]["content"].strip()
+    # Convert response to dictionary and access content
+    return response.choices[0].message.content.strip()
+
 
 if menu == "Home":
     # Page Title
