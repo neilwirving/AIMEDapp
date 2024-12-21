@@ -1,5 +1,3 @@
 fpdf
 streamlit
 openai
-csv
-io
