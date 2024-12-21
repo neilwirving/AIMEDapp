@@ -1,6 +1,7 @@
 import streamlit as st
 from fpdf import FPDF
 import base64
+import openai
 
 # Sidebar Navigation
 menu = st.sidebar.radio("Navigate", ["Home", "Decision Classification Tool", "AIMED Process Walkthrough"])
@@ -38,17 +39,19 @@ st.markdown("""
         border: 1px solid #FF6F61;
         border-radius: 5px;
     }
-    .low-stakes {
-        color: green;
-    }
-    .moderate-stakes {
-        color: orange;
-    }
-    .high-stakes {
-        color: red;
-    }
 </style>
 """, unsafe_allow_html=True)
+
+# AI Advice Function
+def get_ai_advice(user_inputs):
+    openai.api_key = st.secrets["openai"]["api_key"]  # Securely fetch the API key from Streamlit secrets
+    response = openai.Completion.create(
+        engine="text-davinci-003",
+        prompt=f"Analyze the following decision-making inputs and provide advice:\n\n{user_inputs}\n\nAdvice:",
+        max_tokens=500,
+        temperature=0.7
+    )
+    return response.choices[0].text.strip()
 
 if menu == "Home":
     # Page Title
@@ -82,30 +85,18 @@ if menu == "Home":
 
 elif menu == "Decision Classification Tool":
     st.header("Decision Classification Tool")
-    st.write("Evaluate your decision using a more granular approach.")
+    st.write("Evaluate your decision as Reversible/Low Stakes or Irreversible/High Stakes.")
 
     # Input Form
     impact_duration = st.selectbox("Impact Duration", ["1 day to 1 month", "1 month to 1 year", "More than 1 year"])
     cost_of_reversal = st.selectbox("Cost of Reversal", ["Minimal effort or cost", "Moderate effort or cost", "Significant effort or cost"])
     stakeholder_involvement = st.selectbox("Stakeholder Involvement", ["Internal team only", "Internal and some external", "Broad external involvement"])
 
-    # Scoring System
-    impact_duration_score = {"1 day to 1 month": 1, "1 month to 1 year": 2, "More than 1 year": 3}[impact_duration]
-    cost_of_reversal_score = {"Minimal effort or cost": 1, "Moderate effort or cost": 2, "Significant effort or cost": 3}[cost_of_reversal]
-    stakeholder_involvement_score = {"Internal team only": 1, "Internal and some external": 2, "Broad external involvement": 3}[stakeholder_involvement]
-
-    total_score = impact_duration_score + cost_of_reversal_score + stakeholder_involvement_score
-
-    # Classification Logic with Color-Coded Output
-    if total_score <= 3:
-        st.markdown("### Classification: <span class='low-stakes'>Low stakes, reversible decision.</span>", unsafe_allow_html=True)
-        st.markdown("**Action Plan**: Quick evaluation with minimal resources.")
-    elif 4 <= total_score <= 6:
-        st.markdown("### Classification: <span class='moderate-stakes'>Moderate stakes, partially reversible decision.</span>", unsafe_allow_html=True)
-        st.markdown("**Action Plan**: Moderate research and modelling required.")
+    # Classification
+    if impact_duration == "More than 1 year" or cost_of_reversal == "Significant effort or cost" or stakeholder_involvement == "Broad external involvement":
+        st.write("This decision is classified as **Irreversible/High Stakes**.")
     else:
-        st.markdown("### Classification: <span class='high-stakes'>High stakes, irreversible decision.</span>", unsafe_allow_html=True)
-        st.markdown("**Action Plan**: Detailed investigation and stress-testing recommended. Allocate significant time and resources.")
+        st.write("This decision is classified as **Reversible/Low Stakes**.")
 
 elif menu == "AIMED Process Walkthrough":
     st.header("AIMED Process Walkthrough")
@@ -136,46 +127,34 @@ elif menu == "AIMED Process Walkthrough":
     outcomes = st.text_area("What were the outcomes of your decision?", "")
     lessons_learned = st.text_area("What lessons did you learn that can improve future decisions?", "")
 
-    # Export to PDF Functionality
-    if st.button("Export to PDF"):
-        pdf = FPDF()
-        pdf.add_page()
-        pdf.set_font("Arial", size=12)
+    # Restrict AI Advice to One Request Per Session
+    if "ai_requested" not in st.session_state:
+        st.session_state["ai_requested"] = False
 
-        pdf.cell(200, 10, txt="AIMED Process Walkthrough Report", ln=True, align='C')
-        pdf.ln(10)
-
-        pdf.cell(200, 10, txt="1. Assess the Situation", ln=True)
-        pdf.multi_cell(0, 10, f"Problem Description: {problem_description}")
-        pdf.multi_cell(0, 10, f"Business Alignment: {business_alignment}")
-        pdf.ln(5)
-
-        pdf.cell(200, 10, txt="2. Investigate Options", ln=True)
-        pdf.multi_cell(0, 10, f"Possible Solutions: {possible_solutions}")
-        pdf.multi_cell(0, 10, f"Data Needs: {data_needs}")
-        pdf.ln(5)
-
-        pdf.cell(200, 10, txt="3. Model the Outcomes", ln=True)
-        pdf.multi_cell(0, 10, f"Scenarios: {scenarios}")
-        pdf.multi_cell(0, 10, f"Risks: {risks}")
-        pdf.ln(5)
-
-        pdf.cell(200, 10, txt="4. Execute the Decision", ln=True)
-        pdf.multi_cell(0, 10, f"Selected Option: {selected_option}")
-        pdf.multi_cell(0, 10, f"Implementation Plan: {implementation_plan}")
-        pdf.ln(5)
-
-        pdf.cell(200, 10, txt="5. Debrief and Improve", ln=True)
-        pdf.multi_cell(0, 10, f"Outcomes: {outcomes}")
-        pdf.multi_cell(0, 10, f"Lessons Learned: {lessons_learned}")
-
-        pdf_output = "AIMED_Report.pdf"
-        pdf.output(pdf_output)
-
-        with open(pdf_output, "rb") as pdf_file:
-            b64 = base64.b64encode(pdf_file.read()).decode()
-            href = f'<a href="data:application/octet-stream;base64,{b64}" download="AIMED_Report.pdf">Download PDF</a>'
-            st.markdown(href, unsafe_allow_html=True)
+    # AI Advice Section
+    if not st.session_state["ai_requested"] and all([problem_description, business_alignment, possible_solutions, data_needs, scenarios, risks, selected_option, implementation_plan]):
+        if st.button("Get AI Advice"):
+            with st.spinner("Analyzing inputs..."):
+                user_inputs = f"""
+                Problem Description: {problem_description}
+                Business Alignment: {business_alignment}
+                Possible Solutions: {possible_solutions}
+                Data Needs: {data_needs}
+                Scenarios: {scenarios}
+                Risks: {risks}
+                Selected Option: {selected_option}
+                Implementation Plan: {implementation_plan}
+                Outcomes: {outcomes}
+                Lessons Learned: {lessons_learned}
+                """
+                advice = get_ai_advice(user_inputs)
+                st.session_state["ai_requested"] = True
+                st.subheader("AI-Generated Advice")
+                st.write(advice)
+    elif st.session_state["ai_requested"]:
+        st.warning("You have already requested AI advice for this session.")
+    else:
+        st.warning("Please complete all fields before requesting AI advice.")
 
 # Footer
 st.write("Developed to support construction leaders in smarter decision-making using the AIMED framework.")
