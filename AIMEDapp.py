@@ -45,13 +45,16 @@ st.markdown("""
 # AI Advice Function
 def get_ai_advice(user_inputs):
     openai.api_key = st.secrets["openai"]["api_key"]  # Securely fetch the API key from Streamlit secrets
-    response = openai.Completion.create(
-        engine="text-davinci-003",
-        prompt=f"Analyze the following decision-making inputs and provide advice:\n\n{user_inputs}\n\nAdvice:",
+    response = openai.ChatCompletion.create(
+        model="gpt-3.5-turbo",  # Use the latest supported model
+        messages=[
+            {"role": "system", "content": "You are an expert providing decision-making advice."},
+            {"role": "user", "content": f"Analyze the following decision-making inputs and provide advice:\n\n{user_inputs}\n\nAdvice:"}
+        ],
         max_tokens=500,
         temperature=0.7
     )
-    return response.choices[0].text.strip()
+    return response["choices"][0]["message"]["content"].strip()
 
 if menu == "Home":
     # Page Title
@@ -124,8 +127,7 @@ elif menu == "AIMED Process Walkthrough":
 
     # Step 5: Debrief and Improve
     st.subheader("5. Debrief and Improve")
-    outcomes = st.text_area("What were the outcomes of your decision?", "")
-    lessons_learned = st.text_area("What lessons did you learn that can improve future decisions?", "")
+    st.write("While this app does not require a response for this step, remember to reflect on the outcomes and lessons learned to continuously improve your decision-making processes.")
 
     # Restrict AI Advice to One Request Per Session
     if "ai_requested" not in st.session_state:
@@ -144,8 +146,6 @@ elif menu == "AIMED Process Walkthrough":
                 Risks: {risks}
                 Selected Option: {selected_option}
                 Implementation Plan: {implementation_plan}
-                Outcomes: {outcomes}
-                Lessons Learned: {lessons_learned}
                 """
                 advice = get_ai_advice(user_inputs)
                 st.session_state["ai_requested"] = True
