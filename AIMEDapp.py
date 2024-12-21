@@ -57,6 +57,47 @@ def get_ai_advice(user_inputs):
     # Convert response to dictionary and access content
     return response.choices[0].message.content.strip()
 
+# PDF Export Function
+def export_to_pdf(problem_description, business_alignment, possible_solutions, data_needs, scenarios, risks, selected_option, implementation_plan, ai_advice=None):
+    pdf = FPDF()
+    pdf.add_page()
+    pdf.set_font("Arial", size=12)
+
+    pdf.cell(200, 10, txt="AIMED Process Walkthrough Report", ln=True, align='C')
+    pdf.ln(10)
+
+    pdf.cell(200, 10, txt="1. Assess the Situation", ln=True)
+    pdf.multi_cell(0, 10, f"Problem Description: {problem_description}")
+    pdf.multi_cell(0, 10, f"Business Alignment: {business_alignment}")
+    pdf.ln(5)
+
+    pdf.cell(200, 10, txt="2. Investigate Options", ln=True)
+    pdf.multi_cell(0, 10, f"Possible Solutions: {possible_solutions}")
+    pdf.multi_cell(0, 10, f"Data Needs: {data_needs}")
+    pdf.ln(5)
+
+    pdf.cell(200, 10, txt="3. Model the Outcomes", ln=True)
+    pdf.multi_cell(0, 10, f"Scenarios: {scenarios}")
+    pdf.multi_cell(0, 10, f"Risks: {risks}")
+    pdf.ln(5)
+
+    pdf.cell(200, 10, txt="4. Execute the Decision", ln=True)
+    pdf.multi_cell(0, 10, f"Selected Option: {selected_option}")
+    pdf.multi_cell(0, 10, f"Implementation Plan: {implementation_plan}")
+    pdf.ln(5)
+
+    if ai_advice:
+        pdf.cell(200, 10, txt="AI-Generated Advice", ln=True)
+        pdf.multi_cell(0, 10, ai_advice)
+        pdf.ln(5)
+
+    pdf_output = "AIMED_Report.pdf"
+    pdf.output(pdf_output)
+
+    with open(pdf_output, "rb") as pdf_file:
+        b64 = base64.b64encode(pdf_file.read()).decode()
+        href = f'<a href="data:application/octet-stream;base64,{b64}" download="AIMED_Report.pdf">Download PDF</a>'
+        st.markdown(href, unsafe_allow_html=True)
 
 if menu == "Home":
     # Page Title
@@ -135,6 +176,8 @@ elif menu == "AIMED Process Walkthrough":
     if "ai_requested" not in st.session_state:
         st.session_state["ai_requested"] = False
 
+    ai_advice = None
+
     # AI Advice Section
     if not st.session_state["ai_requested"] and all([problem_description, business_alignment, possible_solutions, data_needs, scenarios, risks, selected_option, implementation_plan]):
         if st.button("Get AI Advice"):
@@ -146,17 +189,5 @@ elif menu == "AIMED Process Walkthrough":
                 Data Needs: {data_needs}
                 Scenarios: {scenarios}
                 Risks: {risks}
-                Selected Option: {selected_option}
-                Implementation Plan: {implementation_plan}
-                """
-                advice = get_ai_advice(user_inputs)
-                st.session_state["ai_requested"] = True
-                st.subheader("AI-Generated Advice")
-                st.write(advice)
-    elif st.session_state["ai_requested"]:
-        st.warning("You have already requested AI advice for this session.")
-    else:
-        st.warning("Please complete all fields before requesting AI advice.")
+                Selected Option
 
-# Footer
-st.write("Developed to support construction leaders in smarter decision-making using the AIMED framework.")
