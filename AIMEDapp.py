@@ -73,18 +73,30 @@ if menu == "Home":
 
 elif menu == "Decision Classification Tool":
     st.header("Decision Classification Tool")
-    st.write("Evaluate your decision as Reversible/Low Stakes or Irreversible/High Stakes.")
+    st.write("Evaluate your decision using a more granular approach.")
 
     # Input Form
     impact_duration = st.selectbox("Impact Duration", ["1 day to 1 month", "1 month to 1 year", "More than 1 year"])
     cost_of_reversal = st.selectbox("Cost of Reversal", ["Minimal effort or cost", "Moderate effort or cost", "Significant effort or cost"])
     stakeholder_involvement = st.selectbox("Stakeholder Involvement", ["Internal team only", "Internal and some external", "Broad external involvement"])
 
-    # Classification
-    if impact_duration == "More than 1 year" or cost_of_reversal == "Significant effort or cost" or stakeholder_involvement == "Broad external involvement":
-        st.write("This decision is classified as **Irreversible/High Stakes**.")
+    # Scoring System
+    impact_duration_score = {"1 day to 1 month": 1, "1 month to 1 year": 2, "More than 1 year": 3}[impact_duration]
+    cost_of_reversal_score = {"Minimal effort or cost": 1, "Moderate effort or cost": 2, "Significant effort or cost": 3}[cost_of_reversal]
+    stakeholder_involvement_score = {"Internal team only": 1, "Internal and some external": 2, "Broad external involvement": 3}[stakeholder_involvement]
+
+    total_score = impact_duration_score + cost_of_reversal_score + stakeholder_involvement_score
+
+    # Classification Logic
+    if total_score <= 3:
+        st.write("### Classification: Low stakes, reversible decision.")
+        st.write("**Action Plan**: Quick evaluation with minimal resources.")
+    elif 4 <= total_score <= 6:
+        st.write("### Classification: Moderate stakes, partially reversible decision.")
+        st.write("**Action Plan**: Moderate research and modelling required.")
     else:
-        st.write("This decision is classified as **Reversible/Low Stakes**.")
+        st.write("### Classification: High stakes, irreversible decision.")
+        st.write("**Action Plan**: Detailed investigation and stress-testing recommended. Allocate significant time and resources.")
 
 elif menu == "AIMED Process Walkthrough":
     st.header("AIMED Process Walkthrough")
