@@ -179,6 +179,10 @@ elif menu == "AIMED Process Walkthrough":
 
     ai_advice = None
 
+# Initialize user_inputs
+user_inputs = None
+ai_advice = None
+
  # AI Advice Section
     if not st.session_state["ai_requested"] and all([problem_description, business_alignment, possible_solutions, data_needs, scenarios, risks, selected_option, implementation_plan]):
         if st.button("Get AI Advice"):
